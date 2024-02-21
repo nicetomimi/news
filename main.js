@@ -13,10 +13,32 @@
 //과제제출용-누나api
 let news = [] 
 const getLatestNews = async ()=>{
-    const url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?q=아이유&contry=kr&pageSize=10`) 
+    const url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?q=아이유&country=kr`) 
     const response = await fetch(url) 
     const data = await response.json() 
     news = data.articles
     console.log(data.articles)
 }
 getLatestNews()
+
+
+//모바일 햄버거 버튼
+/* Set the width of the side navigation to 250px */
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+/* Set the width of the side navigation to 0 */
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
+//검색창
+const openSearchBox = () => {
+    let inputArea = document.getElementById("input-area");
+    if (inputArea.style.display === "inline") {
+      inputArea.style.display = "none";
+    } else {
+      inputArea.style.display = "inline";
+    }
+  };
