@@ -2,10 +2,15 @@
   margin-top: 1em;
   display: flex;
   justify-content: center;
-}
+  }
 
 .head-line svg {
   width: 400px;
+}
+
+.icon-area{
+ display: inline;
+ margin-left: 10px;
 }
 
 .head-line-button-section {
