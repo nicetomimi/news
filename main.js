@@ -11,17 +11,39 @@
 // getLatestNews()
 
 
+
+let url = new URL (`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=business&page=1&pageSize=10`)
+
+const getNews = async () => {
+// 에러핸들링
+try{
+  const response = await fetch(url)
+  const data = await response.json()
+   if(response.status == 200){
+     if(data.articles.length===0){
+      throw new Error("No result for this search")
+     }
+    newsList = data.articles 
+    render()
+   }else{
+    throw new Error(data.message)
+   }
+}
+catch(error){
+ errorRender(error.message)
+ console.log("error", error.message)
+}
+}
+
 //과제제출용-누나api
 let newsList = [] 
-const getLatestNews = async ()=>{
-    const url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=business&page=1&pageSize=10`) 
-    const response = await fetch(url) 
-    const data = await response.json() 
-    newsList = data.articles
-    render() // 3. 함수선언, newsList 선언 다음으로
-    console.log(data.articles)
+const getLatestNews = ()=>{
+    url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=business&page=1&pageSize=10`) 
+    getNews()
 }
 getLatestNews()
+
+
 
 //보여주는 ui
 const render = () => {
@@ -39,11 +61,18 @@ const render = () => {
       : news.description.length > 200
         ? news.description.substring(0, 200) + "..."
         : news.description}</p> 
-    <div>${news.source.name || "no source"} ${moment(news.publishedAt).fromNow()}</div>
+    <div class="source-text">${news.source.name || "no source"} ${moment(news.publishedAt).fromNow()}</div>
   </div>
 </div>`)
-    .join('') // 배열을 스트링타입으로 바꾸는 함수 (콤마 표기 없애기)
+    .join('') // 배열을 스트링타입으로 바꾸는 함수 (,콤마 표기 없애기)
   document.getElementById("news-board").innerHTML = newsHTML   //1. 어느 영역에 넣을건지! 영역 가져오기
+}
+
+const errorRender = (errorMessage)=>{
+  const errorHTML = `<div class="alert alert-danger" role="alert">
+  ${errorMessage}
+</div>` //html이 아니니까 스트링으로 넣어줘야 한다
+document.getElementById("news-board").innerHTML = errorHTML 
 }
 
 
@@ -53,32 +82,23 @@ const render = () => {
 //3. 보여주기
 const menus = document.querySelectorAll(".menus button")
 menus.forEach(menu => menu.addEventListener("click", (event) => getNewByCategory(event)))
-
-const getNewByCategory = async (event) => {
+const menusMobile = document.querySelectorAll(".side-menu-list button")
+menusMobile.forEach(menu => menu.addEventListener("click", (event) => getNewByCategory(event)))
+const getNewByCategory = (event) => {
   const category = event.target.textContent.toLowerCase()
-  console.log("category", category)
-  const url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=${category}&page=1&pageSize=10`)
-  const response = await fetch(url)
-  const data = await response.json()
-  console.log("data", data)
-
-  newsList = data.articles // 랜더전에 재할당
-  render()
+  url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=${category}&page=1&pageSize=10`)
+  getNews()
 }
 
 
-
 //모바일 햄버거 버튼
-/* Set the width of the side navigation to 250px */
 function openNav() {
   document.getElementById("mySidenav").style.width = "250px";
 }
 
-/* Set the width of the side navigation to 0 */
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
-
 
 
 //검색창
@@ -92,16 +112,10 @@ const openSearchBox = () => {
 };
 
 
-
 //키워드 검색
-const searchNews = async ()=> {
+const searchNews = ()=> {
   const keyword = document.getElementById("search-input").value
-  console.log("keyword", keyword)
-  const url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?q=${keyword}&page=1&pageSize=10`)
-  const response = await fetch(url)
-  const data = await response.json()
-  console.log("data", data)
-  newsList = data.articles 
-  render()
+  url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?q=${keyword}&page=1&pageSize=10`)
+  getNews()
 }
 
