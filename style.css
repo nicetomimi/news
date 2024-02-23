@@ -43,7 +43,7 @@ height: 40px;
 .news {
   border-bottom: 1px solid black;
   width: 100%;
-  padding: 1.2em 1em;
+  padding: 10px 10px;
 }
 
 .new-img-size {
@@ -123,6 +123,7 @@ height: 40px;
   color: white;
   height: 33px;
   border-radius: 3px;
+
 }
 
 #search-input {
@@ -135,6 +136,21 @@ height: 40px;
 
 .alert{
   text-align: center;
+}
+
+footer{
+  height: 100px;
+  margin-top: 20px;
+  background-color: black;
+  color: white;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+footer svg{
+ width: 200px;
 }
 
 @media screen and (max-width: 63rem) {
