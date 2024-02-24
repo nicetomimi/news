@@ -12,19 +12,27 @@
 
 
 
-let url = new URL (`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=business&page=1&pageSize=10`)
+let url = new URL (`https://rad-mandazi-a1f507.netlify.app/top-headlines?`)
+let totalResults = 0
+let page = 1
+const pageSize = 10
+const groupSize = 5
 
 const getNews = async () => {
 // 에러핸들링
 try{
+  url.searchParams.set("page",page) // url 세팅해주는 함수(&page=page), 순서: url fetch 전에 세팅
+  url.searchParams.set("pageSize", pageSize)
   const response = await fetch(url)
   const data = await response.json()
    if(response.status == 200){
-     if(data.articles.length===0){
+     if(data.articles.length === 0){
       throw new Error("No result for this search")
      }
-    newsList = data.articles 
+    newsList = data.articles
+    totalResults = data.totalResults
     render()
+    paginationRender()
    }else{
     throw new Error(data.message)
    }
@@ -35,10 +43,11 @@ catch(error){
 }
 }
 
-//과제제출용-누나api
+
+//누나api
 let newsList = [] 
 const getLatestNews = ()=>{
-    url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=business&page=1&pageSize=10`) 
+    url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?`) 
     getNews()
 }
 getLatestNews()
@@ -55,7 +64,7 @@ const render = () => {
       src="${news.urlToImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU"}"/>
   </div>
   <div class="col-lg-8">
-    <h2>${news.title}</h2>
+    <h4>${news.title}</h4>
     <p>${news.description == null || news.description == ""
       ? "내용없음"
       : news.description.length > 200
@@ -76,6 +85,28 @@ document.getElementById("news-board").innerHTML = errorHTML
 }
 
 
+//페이지네이션
+const paginationRender=()=>{
+  let totalPages = Math.ceil(totalResults / pageSize)
+  let pageGroup = Math.ceil(page / groupSize)
+  let lastPage = pageGroup * groupSize
+  if(lastPage > totalPages){
+    lastPage = totalPages
+  }
+  let firstPage = lastPage - (groupSize - 1) <=0? 1 : lastPage - (groupSize - 1)
+  let paginationHTML =``
+  for(let i=firstPage;i<=lastPage;i++){
+    paginationHTML += `<li class="page-item ${i===page? "active" : ''}" onclick="moveToPage(${i})"><a class="page-link" href="#">${i}</a></li>`
+  }
+  document.querySelector(".pagination").innerHTML = paginationHTML
+ }
+
+ const moveToPage=(pageNum)=>{
+  console.log("moveToPage",pageNum)
+  page = pageNum
+  getNews()
+ }
+
 //카테고리별 검색
 //1. 버튼들에 클릭이벤트 주기
 //2. 카테고리별 뉴스 가져오기
@@ -84,11 +115,27 @@ const menus = document.querySelectorAll(".menus button")
 menus.forEach(menu => menu.addEventListener("click", (event) => getNewByCategory(event)))
 const menusMobile = document.querySelectorAll(".side-menu-list button")
 menusMobile.forEach(menu => menu.addEventListener("click", (event) => getNewByCategory(event)))
+
 const getNewByCategory = (event) => {
   const category = event.target.textContent.toLowerCase()
-  url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=${category}&page=1&pageSize=10`)
+  page = 1
+  url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?category=${category}`)
   getNews()
 }
+
+
+//로고 홈화면
+const totalNewsWrapper = document.querySelector("#title");
+const logoImage = totalNewsWrapper.querySelector("#totalNews");
+logoImage.addEventListener("click", () => {
+    location.reload();
+});
+
+//all
+const allButton = totalNewsWrapper.querySelector("#all-button");
+allButton.addEventListener("click", () => {
+    location.reload();
+});
 
 
 //모바일 햄버거 버튼
@@ -115,7 +162,7 @@ const openSearchBox = () => {
 //키워드 검색
 const searchNews = ()=> {
   const keyword = document.getElementById("search-input").value
-  url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?q=${keyword}&page=1&pageSize=10`)
+  url = new URL(`https://rad-mandazi-a1f507.netlify.app/top-headlines?q=${keyword}`)
   getNews()
 }
 

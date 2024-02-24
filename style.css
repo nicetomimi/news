@@ -3,6 +3,7 @@
   margin-top: 30px;
   display: flex;
   justify-content: center;
+  cursor: pointer;
   }
 
 .head-line svg {
@@ -57,10 +58,19 @@ height: 40px;
   display: block;
 }
 
-.source-text{
-  color: gray;
+.col-lg-8 h4{
+ font-weight: 400;
+ margin-top: 10px;
 }
 
+.col-lg-8 p {
+  font-size: medium;
+}
+
+.source-text{
+  font-size: small;
+  color: gray;
+}
 
 /* The side navigation menu */
 .sidenav {
@@ -134,9 +144,32 @@ height: 40px;
   margin: 0;
 }
 
+
 .alert{
   text-align: center;
 }
+
+.page-item{
+  cursor: pointer;
+}
+
+.pagination {
+  --bs-pagination-padding-x: 0.75rem;
+  --bs-pagination-padding-y: 0.375rem;
+  --bs-pagination-font-size: 1rem;
+  --bs-pagination-color: black;
+  --bs-pagination-bg: var(--bs-body-bg);
+  --bs-pagination-hover-color: black;
+  --bs-pagination-hover-bg: rgb(225, 225, 225);
+  --bs-pagination-focus-color: black;
+  --bs-pagination-active-color: #fff;
+  --bs-pagination-active-bg: #000000;
+  --bs-pagination-active-border-color: #000000;
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+}
+
 
 footer{
   height: 100px;
